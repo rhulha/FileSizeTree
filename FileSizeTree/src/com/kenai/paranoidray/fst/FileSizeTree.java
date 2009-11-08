@@ -10,6 +10,7 @@
  */
 package com.kenai.paranoidray.fst;
 
+import com.kenai.paranoidray.photon.Photon;
 import java.awt.Dimension;
 import java.io.File;
 import javax.swing.JFileChooser;
@@ -62,12 +63,22 @@ public class FileSizeTree extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItemPhoton = new javax.swing.JMenuItem();
         jScrollPaneForTree = new javax.swing.JScrollPane();
         fileSizeTree = new javax.swing.JTree();
         jPanelTop = new javax.swing.JPanel();
         jTextFieldPath = new javax.swing.JTextField();
         jButtonSelectPath = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
+
+        jMenuItemPhoton.setText("Start Photon");
+        jMenuItemPhoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemPhotonActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItemPhoton);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("FileSizeTree");
@@ -78,6 +89,7 @@ public class FileSizeTree extends javax.swing.JFrame {
         });
 
         fileSizeTree.setModel(null);
+        fileSizeTree.setComponentPopupMenu(jPopupMenu1);
         fileSizeTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 fileSizeTreeValueChanged(evt);
@@ -158,6 +170,8 @@ public class FileSizeTree extends javax.swing.JFrame {
     private void fileSizeTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_fileSizeTreeValueChanged
         // TODO add your handling code here:
         dataset.clear();
+        if( fileSizeTree.getSelectionPath() == null)
+            return;
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) fileSizeTree.getSelectionPath().getLastPathComponent();
 
         for( int i = 0; i<node.getChildCount(); i++)
@@ -168,6 +182,11 @@ public class FileSizeTree extends javax.swing.JFrame {
 
         chart.fireChartChanged();
     }//GEN-LAST:event_fileSizeTreeValueChanged
+
+    private void jMenuItemPhotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPhotonActionPerformed
+        // TODO add your handling code here:
+        Photon.main(new String[]{jTextFieldPath.getText()});
+    }//GEN-LAST:event_jMenuItemPhotonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -183,8 +202,10 @@ public class FileSizeTree extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTree fileSizeTree;
     private javax.swing.JButton jButtonSelectPath;
+    private javax.swing.JMenuItem jMenuItemPhoton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelTop;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPaneForTree;
     private javax.swing.JTextField jTextFieldPath;
     // End of variables declaration//GEN-END:variables
