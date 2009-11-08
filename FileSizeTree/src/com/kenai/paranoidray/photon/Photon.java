@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 /**
@@ -33,7 +34,10 @@ public class Photon extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         jListResult.setModel(new DefaultListModel());
         if( path != null)
+        {
+            //this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             jTextFieldPath.setText(path);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -54,7 +58,7 @@ public class Photon extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabelCurrent = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanelTop.setPreferredSize(new java.awt.Dimension(572, 40));
 
