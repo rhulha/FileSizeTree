@@ -28,10 +28,12 @@ import javax.swing.SwingUtilities;
 public class Photon extends javax.swing.JFrame {
 
     /** Creates new form Photon */
-    public Photon() {
+    public Photon(String path) {
         initComponents();
         setLocationRelativeTo(null);
         jListResult.setModel(new DefaultListModel());
+        if( path != null)
+            jTextFieldPath.setText(path);
     }
 
     /** This method is called from within the constructor to
@@ -56,16 +58,12 @@ public class Photon extends javax.swing.JFrame {
 
         jPanelTop.setPreferredSize(new java.awt.Dimension(572, 40));
 
-        jTextFieldPath.setText("C:\\IDE\\Server\\jboss-seam-2.2.0.GA\\examples");
-
         jButtonSearch.setText("Search");
         jButtonSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSearchActionPerformed(evt);
             }
         });
-
-        jTextFieldPhrase.setText("selectOneMenu");
 
         javax.swing.GroupLayout jPanelTopLayout = new javax.swing.GroupLayout(jPanelTop);
         jPanelTop.setLayout(jPanelTopLayout);
@@ -245,9 +243,10 @@ public class Photon extends javax.swing.JFrame {
     * @param args the command line arguments
     */
     public static void main(String args[]) {
+        final String path = args.length > 0 ? args[0] : null;
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Photon().setVisible(true);
+                new Photon(path).setVisible(true);
             }
         });
     }

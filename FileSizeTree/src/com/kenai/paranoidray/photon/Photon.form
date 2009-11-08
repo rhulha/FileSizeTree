@@ -63,9 +63,6 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="jTextFieldPath">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="C:\IDE\Server\jboss-seam-2.2.0.GA\examples"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonSearch">
           <Properties>
@@ -76,9 +73,6 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldPhrase">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="selectOneMenu"/>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>
