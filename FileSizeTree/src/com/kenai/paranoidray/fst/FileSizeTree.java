@@ -13,11 +13,16 @@ package com.kenai.paranoidray.fst;
 import com.kenai.paranoidray.photon.Photon;
 import java.awt.Dimension;
 import java.io.File;
+import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
@@ -50,7 +55,7 @@ public class FileSizeTree extends javax.swing.JFrame {
         final ChartPanel chartPanel = new ChartPanel(chart);
         //chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 
-        jPanel1.add(chartPanel);
+        jPanelChart.add(chartPanel);
         this.pack();
     }
 
@@ -64,13 +69,23 @@ public class FileSizeTree extends javax.swing.JFrame {
     private void initComponents() {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItemSort = new javax.swing.JMenuItem();
         jMenuItemPhoton = new javax.swing.JMenuItem();
-        jScrollPaneForTree = new javax.swing.JScrollPane();
-        fileSizeTree = new javax.swing.JTree();
         jPanelTop = new javax.swing.JPanel();
         jTextFieldPath = new javax.swing.JTextField();
         jButtonSelectPath = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        jSplitPaneMain = new javax.swing.JSplitPane();
+        jScrollPaneForTree = new javax.swing.JScrollPane();
+        fileSizeTree = new javax.swing.JTree();
+        jPanelChart = new javax.swing.JPanel();
+
+        jMenuItemSort.setText("Sort this level");
+        jMenuItemSort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSortActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItemSort);
 
         jMenuItemPhoton.setText("Start Photon");
         jMenuItemPhoton.addActionListener(new java.awt.event.ActionListener() {
@@ -82,22 +97,7 @@ public class FileSizeTree extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("FileSizeTree");
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                formComponentResized(evt);
-            }
-        });
-
-        fileSizeTree.setModel(null);
-        fileSizeTree.setComponentPopupMenu(jPopupMenu1);
-        fileSizeTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                fileSizeTreeValueChanged(evt);
-            }
-        });
-        jScrollPaneForTree.setViewportView(fileSizeTree);
-
-        getContentPane().add(jScrollPaneForTree, java.awt.BorderLayout.CENTER);
+        setMinimumSize(new java.awt.Dimension(800, 600));
 
         jPanelTop.setPreferredSize(new java.awt.Dimension(578, 30));
         jPanelTop.setLayout(new java.awt.BorderLayout());
@@ -113,14 +113,27 @@ public class FileSizeTree extends javax.swing.JFrame {
 
         getContentPane().add(jPanelTop, java.awt.BorderLayout.PAGE_START);
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(200, 200));
-        jPanel1.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                jPanel1ComponentResized(evt);
+        jSplitPaneMain.setDividerLocation(200);
+        jSplitPaneMain.setDividerSize(3);
+        jSplitPaneMain.setResizeWeight(0.5);
+        jSplitPaneMain.setContinuousLayout(true);
+
+        fileSizeTree.setModel(null);
+        fileSizeTree.setComponentPopupMenu(jPopupMenu1);
+        fileSizeTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                fileSizeTreeValueChanged(evt);
             }
         });
-        jPanel1.setLayout(new java.awt.BorderLayout());
-        getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_END);
+        jScrollPaneForTree.setViewportView(fileSizeTree);
+
+        jSplitPaneMain.setLeftComponent(jScrollPaneForTree);
+
+        jPanelChart.setPreferredSize(new java.awt.Dimension(200, 200));
+        jPanelChart.setLayout(new java.awt.BorderLayout());
+        jSplitPaneMain.setRightComponent(jPanelChart);
+
+        getContentPane().add(jSplitPaneMain, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -149,24 +162,6 @@ public class FileSizeTree extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButtonSelectPathActionPerformed
 
-    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        // TODO add your handling code here:
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run() {
-            }
-        });
-
-    }//GEN-LAST:event_formComponentResized
-
-    private void jPanel1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel1ComponentResized
-        // TODO add your handling code here:
-                Dimension size = jPanel1.getSize();
-                size.width = size.height;
-                jPanel1.setPreferredSize(size);
-        
-    }//GEN-LAST:event_jPanel1ComponentResized
-
     private void fileSizeTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_fileSizeTreeValueChanged
         // TODO add your handling code here:
         dataset.clear();
@@ -188,6 +183,42 @@ public class FileSizeTree extends javax.swing.JFrame {
         Photon.main(new String[]{jTextFieldPath.getText()});
     }//GEN-LAST:event_jMenuItemPhotonActionPerformed
 
+    private void jMenuItemSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSortActionPerformed
+        // TODO add your handling code here:
+        if( fileSizeTree.getSelectionPath() == null)
+            return;
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) fileSizeTree.getSelectionPath().getLastPathComponent();
+
+        LinkedList<DefaultMutableTreeNode> nodes = new LinkedList<DefaultMutableTreeNode>();
+
+        for( int i = 0; i<node.getChildCount(); i++)
+        {
+            DefaultMutableTreeNode tobemoved = (DefaultMutableTreeNode) node.getChildAt(i);
+            if( nodes.size() == 0)
+                nodes.add( tobemoved);
+            PathSize tobemoved_ps = (PathSize) tobemoved.getUserObject();
+
+            for (int j = 0; j < nodes.size(); j++) {
+                DefaultMutableTreeNode testNode = nodes.get(j);
+                PathSize test_ps = (PathSize) testNode.getUserObject();
+                if( tobemoved_ps.getSize() > test_ps.getSize() )
+                {
+                    nodes.add(j, tobemoved);
+                    break;
+                }
+            }
+            if( !nodes.contains(tobemoved))
+                nodes.add(tobemoved);
+        }
+
+        for (int j = 0; j < nodes.size(); j++) {
+            node.insert(nodes.get(j), j);
+        }
+        fileSizeTree.updateUI();
+        fileSizeTreeValueChanged(null);
+        
+    }//GEN-LAST:event_jMenuItemSortActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -203,10 +234,12 @@ public class FileSizeTree extends javax.swing.JFrame {
     private javax.swing.JTree fileSizeTree;
     private javax.swing.JButton jButtonSelectPath;
     private javax.swing.JMenuItem jMenuItemPhoton;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenuItem jMenuItemSort;
+    private javax.swing.JPanel jPanelChart;
     private javax.swing.JPanel jPanelTop;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPaneForTree;
+    private javax.swing.JSplitPane jSplitPaneMain;
     private javax.swing.JTextField jTextFieldPath;
     // End of variables declaration//GEN-END:variables
 }
