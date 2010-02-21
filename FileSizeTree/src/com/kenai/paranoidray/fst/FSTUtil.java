@@ -4,6 +4,7 @@
  */
 package com.kenai.paranoidray.fst;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.io.File;
 import javax.swing.JFrame;
@@ -63,6 +64,26 @@ public class FSTUtil extends Thread {
 
     }
 
+    public static void finished() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Container p = tree.getParent();
+                while( true)
+                {
+                    if(  p instanceof JFrame)
+                    {
+                        ((JFrame) p).setTitle("FileSizeTree (DONE)");
+                        tree.setBackground(Color.white);
+                        break;
+                    }
+                    p = p.getParent();
+                }
+                FileSizeTree.sortPath((DefaultMutableTreeNode)tree.getModel().getRoot());
+                tree.updateUI();
+            }
+        });
+    }
+
     public static void updateTreeUI() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -76,16 +97,6 @@ public class FSTUtil extends Thread {
         AddNode an = new AddNode((DefaultMutableTreeNode) tree.getModel().getRoot(), path);
         an.doit();
         
-        Container p = tree.getParent();
-        while( true)
-        {
-            if(  p instanceof JFrame)
-            {
-                ((JFrame) p).setTitle("FileSizeTree (DONE)");
-                break;
-            }
-            p = p.getParent();
-        }
-        updateTreeUI();
+        finished();
     }
 }

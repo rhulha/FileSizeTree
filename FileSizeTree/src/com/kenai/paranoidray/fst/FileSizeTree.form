@@ -125,6 +125,7 @@
                 </Property>
               </Properties>
               <Events>
+                <EventHandler event="treeExpanded" listener="javax.swing.event.TreeExpansionListener" parameters="javax.swing.event.TreeExpansionEvent" handler="fileSizeTreeTreeExpanded"/>
                 <EventHandler event="valueChanged" listener="javax.swing.event.TreeSelectionListener" parameters="javax.swing.event.TreeSelectionEvent" handler="fileSizeTreeValueChanged"/>
               </Events>
             </Component>
