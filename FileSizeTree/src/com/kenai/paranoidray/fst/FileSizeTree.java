@@ -11,6 +11,7 @@
 package com.kenai.paranoidray.fst;
 
 import com.kenai.paranoidray.photon.Photon;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.LinkedList;
@@ -23,6 +24,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
@@ -120,6 +122,13 @@ public class FileSizeTree extends javax.swing.JFrame {
 
         fileSizeTree.setModel(null);
         fileSizeTree.setComponentPopupMenu(jPopupMenu1);
+        fileSizeTree.addTreeExpansionListener(new javax.swing.event.TreeExpansionListener() {
+            public void treeCollapsed(javax.swing.event.TreeExpansionEvent evt) {
+            }
+            public void treeExpanded(javax.swing.event.TreeExpansionEvent evt) {
+                fileSizeTreeTreeExpanded(evt);
+            }
+        });
         fileSizeTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 fileSizeTreeValueChanged(evt);
@@ -155,6 +164,7 @@ public class FileSizeTree extends javax.swing.JFrame {
             fileSizeTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(new PathSize(sf.getName(), 0))));
             FSTUtil fst = new FSTUtil(fileSizeTree, sf);
             this.setTitle("FileSizeTree (RUNNING)");
+            fileSizeTree.setBackground(Color.red);
             fst.start();
 
         } else {
@@ -187,8 +197,34 @@ public class FileSizeTree extends javax.swing.JFrame {
         // TODO add your handling code here:
         if( fileSizeTree.getSelectionPath() == null)
             return;
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) fileSizeTree.getSelectionPath().getLastPathComponent();
 
+        sortPath( fileSizeTree.getSelectionPath() );
+        fileSizeTree.updateUI();
+        fileSizeTreeValueChanged(null);
+        
+    }//GEN-LAST:event_jMenuItemSortActionPerformed
+
+    private void fileSizeTreeTreeExpanded(javax.swing.event.TreeExpansionEvent evt) {//GEN-FIRST:event_fileSizeTreeTreeExpanded
+        // TODO add your handling code here:
+        sortPath( evt.getPath() );
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                fileSizeTree.updateUI();
+            }
+        });
+        // fileSizeTree.updateUI();
+
+        //fileSizeTreeValueChanged(null);
+
+    }//GEN-LAST:event_fileSizeTreeTreeExpanded
+
+
+    public static void sortPath( TreePath path)
+    {
+        sortPath( (DefaultMutableTreeNode) path.getLastPathComponent());
+    }
+    public static void sortPath( DefaultMutableTreeNode node)
+    {
         LinkedList<DefaultMutableTreeNode> nodes = new LinkedList<DefaultMutableTreeNode>();
 
         for( int i = 0; i<node.getChildCount(); i++)
@@ -214,10 +250,7 @@ public class FileSizeTree extends javax.swing.JFrame {
         for (int j = 0; j < nodes.size(); j++) {
             node.insert(nodes.get(j), j);
         }
-        fileSizeTree.updateUI();
-        fileSizeTreeValueChanged(null);
-        
-    }//GEN-LAST:event_jMenuItemSortActionPerformed
+    }
 
     /**
      * @param args the command line arguments
